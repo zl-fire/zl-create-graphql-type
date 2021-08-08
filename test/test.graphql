@@ -39,3 +39,44 @@ type testType_dataObj_itemsObj_reportDataObj_urlParamsObj {
   utm_medium:String
   depth_1-utm_source:String
 }
+type testType {
+  code:Int
+  data:testType_dataObj
+  message:String
+}
+type testType_dataObj {
+  ext:testType_dataObj_extObj
+  size:Int
+  items:[testType_dataObj_itemsObj]
+}
+type testType_dataObj_extObj {
+}
+type testType_dataObj_itemsObj {
+  ext:String
+  resourceId:String
+  mediaAssetInfo:String
+  productId:String
+  reportData:testType_dataObj_itemsObj_reportDataObj
+  recommendType:String
+  index:Int
+  style:String
+  strategyId:String
+  productType:String
+}
+type testType_dataObj_itemsObj_reportDataObj {
+  eventClick:Boolean
+  data:testType_dataObj_itemsObj_reportDataObj_dataObj
+  urlParams:testType_dataObj_itemsObj_reportDataObj_urlParamsObj
+  eventView:Boolean
+}
+type testType_dataObj_itemsObj_reportDataObj_dataObj {
+  mod:String
+  extra:String
+  dist_request_id:String
+  index:String
+  strategy:String
+}
+type testType_dataObj_itemsObj_reportDataObj_urlParamsObj {
+  utm_medium:String
+  depth_1-utm_source:String
+}

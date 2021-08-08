@@ -210,7 +210,12 @@ async function createGraphqlType(parObj) {
         return createGraphqlType.returnStrQue.join("\n");
     }
 }
-
-module.exports = createGraphqlType;
+// 如果此条件不成立，那么将自动的注入到window上
+if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = createGraphqlType;
+}
+else{
+    window.createGraphqlType=createGraphqlType;
+}
 
 
