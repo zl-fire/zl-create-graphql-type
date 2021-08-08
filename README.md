@@ -142,12 +142,12 @@ type testType_dataObj_itemsObj {
  3. 对于数组类型数据，请不要给空数组[],请给上一个数组元素，从而让解析器识别其对应类型。
  4. 在客户端浏览器中，只能执行生成对应的graphql类型字符串，而不能写入文件中，因为客户端js无法读写本地磁盘
 
-## 6. 其他使用示例
+## 6. 其他使用示例: 将生成的graphql类型定义写入到本地文件中
 
-1. ========以覆盖原文件内容的方式将graphql类型写入到文件中========
+1. ========以覆盖原文件内容的方式，将graphql类型写入到文件中========
 ```js
 let parObj = {
-    filePath: __dirname + '/test.graphql', 
+    filePath: __dirname + '/test.graphql',  //要写入的文件路径
     rewrite: true,
     typeObj: {
         "code": 200,
@@ -193,10 +193,10 @@ createGraphqlType(parObj)
 ```
 
 
-2. ========以追加原文件内容的方式将graphql类型写入到文件中========
+2. ========以追加原文件内容的方式，将生成的graphql类型定义写入到文件中========
 ```js
 let parObj = {
-    filePath: __dirname + '/test.graphql', 
+    filePath: __dirname + '/test.graphql',  //要写入的文件路径
     rewrite: false, //默认追加方式
     typeObj: {
         "code": 200,
@@ -242,11 +242,11 @@ createGraphqlType(parObj)
 ```
 
 
-3. ========每次都创建新文件写入graphql类型========
+3. ========每次都创建新文件，写入生成的graphql类型地定义========
 ```js
 // 只有每次创建时的path路径不一样即可
 let parObj = {
-    filePath: __dirname + "/" + new Date().toLocaleString() + '.graphql', 
+    filePath: __dirname + "/" + new Date().toLocaleString() + '.graphql', //要写入的文件路径
     typeObj: {
         "code": 200,
         "data": {
