@@ -16,7 +16,6 @@ try {
     win=window;
 }
 
-
 // 对js类型和graphql类型做映射  graphql类型：String、Int、Float、Boolean 、 ID ,[Int]
 const TYPES = {
     string: 'String',
