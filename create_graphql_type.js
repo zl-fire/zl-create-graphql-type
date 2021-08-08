@@ -1,18 +1,22 @@
 // ===============graphql类型构造器：自动将dubbo端返回的数据结构转换成graphql对应的类型定义=====================
-let path={},fs={};  
+let path={},fs={
+    appendFile:()=>{},
+    writeFile:()=>{},
+};  
 if(!window){ //兼容纯前端调用，即在浏览器里面执行
      path = require('path');
      fs = require('fs');
 }
+
 // 对js类型和graphql类型做映射  graphql类型：String、Int、Float、Boolean 、 ID ,[Int]
 const TYPES = {
     string: 'String',
-    int: 'Int',
+    int: 'Int',//如果typeof是number，且不含有小数点，就设置类型为Int类型
     float: 'Float', //如果typeof是number，且含有小数点，就设置类型为Float类型
     boolean: 'Boolean',
     // 下面的2个类型graphql是没有的，需要单独处理
-    array: 'Array', //如果typeof是object且length属性存在 就设置为array类型
-    object: 'Object' //如果typeof是object且length属性存在 就设置为array类型
+    array: 'Array', 
+    object: 'Object' 
 };
 
 
@@ -137,6 +141,9 @@ async function createGraphqlType(parObj) {
     createGraphqlType.rewrite = rewrite;
     getReturnObject(parObj);
     if (filePath) {
+        if(window){
+            throw "此为浏览器客户端，无法将graphql写入文件，只能将其作为字符串返回！" ;
+        }
         console.log("=======类型文件路径：", filePath);
         // 如果本地不存在这个文件，那么就会重新创建一个文件，如果存在此文件，那么在写入前，就清空原文件所有内容
         if (rewrite == true) {
