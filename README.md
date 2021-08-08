@@ -6,6 +6,11 @@
 * 在浏览器环境下运行，将会返回生成的graphql类型字符串内容
 * 在node环境下运行，即可返回字符串内容也可直接生成文件到需要的位置处
 
+**演示：**
+   https://zhangluzhanglu.github.io/code/create_graphql_type.html
+
+   ![alt 属性文本](./img/demo.png)
+
 ## 2. 起因
 
 在开发中，需要将一个项目原本的rest风格接口转换为graphql方式的接口，如下：
