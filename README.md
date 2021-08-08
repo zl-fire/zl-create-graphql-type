@@ -28,7 +28,7 @@
 
 * ***使用`script`标签就进行引入使用***
    ```js
-      <script src="https://cdn.jsdelivr.net/npm/zl-create-graphql-type@1.0.2/create_graphql_type.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/zl-create-graphql-type@1.0.3/create_graphql_type.js"></script>
    ```
 * ***使用`import`方式引入使用***
    ```js

@@ -48,7 +48,11 @@ function getReturnObject({ typeWay, typeName, typeObj }) {
     createGraphqlType.index++; //一旦进入一次此函数，就执行一次，下标++，从而保证执行顺序
     let theIndex = createGraphqlType.index;
     if (typeWay != 'input' && typeWay != 'type') {
-        throw '据后端数据构造graphql类型是失败：无效的类型方式 ' + typeWay + ' typeWay仅能为input|type';
+        let msg = '据后端数据构造graphql类型是失败：无效的类型方式 ' + typeWay + ' typeWay仅能为input|type';
+        if (win && win.alert) {
+            win.alert(msg)
+        }
+        throw msg;
     }
 
     let typeDefine = `${typeWay} ${typeName} {` + '\n';
@@ -103,8 +107,12 @@ function getReturnObject({ typeWay, typeName, typeObj }) {
 // 传入一个值，返回这个值对应的graphql类型
 function getGraphqlType(val) {
     let typev = typeof val;
-    if (val == null) {
-        throw '对于值为null的字段，无法识别其具体类型，请给上含有具体类型的值';
+    if (val == null || val == undefined) {
+        let msg='对于值为null 或 undefined 的字段，无法识别其具体类型，请给上含有具体类型的值';
+        if (win && win.alert) {
+            win.alert(msg)
+        }
+        throw msg;
     }
     else if (val instanceof Array) { //数组
         typev = 'array';
@@ -145,7 +153,11 @@ function deepResolveArryType(arr, typeName, typeWay) {
         }
     }
     else {
-        throw '数组类型不能为空，否则无法构建对应的graphql类型';
+        let msg='数组类型不能为空，否则无法构建对应的graphql类型';
+        if (win && win.alert) {
+            win.alert(msg)
+        }
+        throw msg;
     }
 }
 
@@ -186,7 +198,11 @@ async function createGraphqlType(parObj) {
     getReturnObject(parObj);
     if (filePath) {
         if (win) {
-            throw "zl-create-graphql-type: 当前代码运行环境为浏览器，无法将graphql类型写入文件，只能将其作为字符串返回！";
+            let msg="zl-create-graphql-type: 当前代码运行环境为浏览器，无法将graphql类型写入文件，只能将其作为字符串返回！";
+            if (win.alert) {
+                win.alert(msg)
+            }
+            throw msg;
         }
         console.log("=======类型文件路径：", filePath);
         // 如果本地不存在这个文件，那么就会重新创建一个文件，如果存在此文件，那么在写入前，就清空原文件所有内容
@@ -214,8 +230,8 @@ async function createGraphqlType(parObj) {
 if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = createGraphqlType;
 }
-else{
-    window.createGraphqlType=createGraphqlType;
+else {
+    window.createGraphqlType = createGraphqlType;
 }
 
 

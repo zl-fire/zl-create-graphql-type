@@ -1,6 +1,6 @@
 {
   "name": "zl-create-graphql-type",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "在编写graphql接口时，自动解析接口实际参数和返回值，创建对应的graphql类型",
   "main": "create_graphql_type.js",
   "scripts": {
