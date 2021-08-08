@@ -1,8 +1,9 @@
 // ===============graphql类型构造器：自动将dubbo端返回的数据结构转换成graphql对应的类型定义=====================
-
-const path = require('path');
-var fs = require('fs');
-
+let path={},fs={};  
+if(!window){ //兼容纯前端调用，即在浏览器里面执行
+     path = require('path');
+     fs = require('fs');
+}
 // 对js类型和graphql类型做映射  graphql类型：String、Int、Float、Boolean 、 ID ,[Int]
 const TYPES = {
     string: 'String',
@@ -64,6 +65,10 @@ function getReturnObject({ typeWay, typeName, typeObj }) {
                         resolve(`${typeWay} ${typeName}` + ':内容写入文件成功');
                     });
                 }
+                else {
+                    createGraphqlType.returnStrQue.push(typeDefine);//直接返回字符串
+                    resolve(typeDefine);
+                }
             });
         };
 
@@ -124,8 +129,9 @@ function deepResolveArryType(arr, typeName, typeWay) {
 
 // 导出此函数供用户使用
 async function createGraphqlType(parObj) {
-    let { filePath, rewrite = false } = parObj;
+    let { filePath = false, rewrite = false } = parObj;
     createGraphqlType.taskQue = [];// 创建一个任务队列数组
+    createGraphqlType.returnStrQue = [];// 创建一个承接返回字符串的队列数组
     createGraphqlType.index = -1;//下标，为了有序执行文件创建
     createGraphqlType.filePath = filePath;
     createGraphqlType.rewrite = rewrite;
@@ -149,53 +155,11 @@ async function createGraphqlType(parObj) {
     for (let i = 0; i < createGraphqlType.taskQue.length; i++) {
         await createGraphqlType.taskQue[i]();
     }
+    if (!filePath) {  //没有传路径，返回字符串
+        return createGraphqlType.returnStrQue.join("\n");
+    }
 }
 
 module.exports = createGraphqlType;
 
-// 调用示例（注意：为了获取到正确的类型，数据示例的字段值不能为undefined或者null）
-let parObj = {
-    // filePath: __dirname + "/" + new Date().toLocaleString() + '.graphql',
-    filePath: './test.graphql',
-    rewrite: true,//表示是否以覆盖原文件内容的方式写入。true表示是,false表示以追加的方式写入文件. 默认为false:追加
-    typeObj: {
-        "code": 200,
-        "data": {
-            "ext": {},
-            "size": 10,
-            "items": [
-                {
-                    "ext": "",
-                    "resourceId": "",
-                    "mediaAssetInfo": "",
-                    "productId": "python工程师",
-                    "reportData": {
-                        "eventClick": true,
-                        "data": {
-                            "mod": "popu_895",
-                            "extra": "{\"utm_medium\":\"distribute.pc_search_hot_word.none-task-hot_word-alirecmd-1.nonecase\",\"hotword\":\"python工程师\"}",
-                            "dist_request_id": "1628386601938_69042",
-                            "index": "1",
-                            "strategy": "alirecmd"
-                        },
-                        "urlParams": {
-                            "utm_medium": "distribute.pc_search_hot_word.none-task-hot_word-alirecmd-1.nonecase",
-                            "depth_1-utm_source": "distribute.pc_search_hot_word.none-task-hot_word-alirecmd-1.nonecase"
-                        },
-                        "eventView": true
-                    },
-                    "recommendType": "ali",
-                    "index": 1,
-                    "style": "word_1",
-                    "strategyId": "alirecmd",
-                    "productType": "hot_word"
-                }
-            ]
-        },
-        "message": "success"
-    },
-    typeWay: 'type',
-    typeName: 'user'
-};
-createGraphqlType(parObj);
 
