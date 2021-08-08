@@ -3,17 +3,18 @@ let path, fs, win;
 
 //兼容纯前端调用，即在浏览器里面执行
 try {
-    // node端
-    path = require('path');
-    fs = require('fs');
-} catch (err) {
     // 浏览器端
     path = {};
     fs = {
         appendFile: () => { },
         writeFile: () => { },
     };
-    win=window;
+    win = window;
+
+} catch (err) {
+    // node端
+    path = require('path');
+    fs = require('fs');
 }
 
 // 对js类型和graphql类型做映射  graphql类型：String、Int、Float、Boolean 、 ID ,[Int]
@@ -39,9 +40,10 @@ const TYPES = {
 * @author 张路 2021/08/08 
 */
 function getReturnObject({ typeWay, typeName, typeObj }) {
-    // typeWay:input|type 表示是输入类型还是输出类型, typeName：类型的名字, typeObj：实际类型对象
-    // 逻辑：先递归遍历整个对象，针对每个对象，定义对应类型（名字就从外面一层层传下去，用下划线分隔开）
-    // 在从高层遍历时，就先生成对应的名字进行占位，后面再以此名字为类型名进行生成真正的类型定义
+    /* 
+    逻辑：先递归遍历整个对象，针对每个对象，定义对应类型（名字就从外面一层层传下去，用下划线分隔开）
+         在从高层遍历时，就先生成对应的名字进行占位，后面再以此名字为类型名进行生成真正的类型定义
+    */
 
     createGraphqlType.index++; //一旦进入一次此函数，就执行一次，下标++，从而保证执行顺序
     let theIndex = createGraphqlType.index;
@@ -184,7 +186,7 @@ async function createGraphqlType(parObj) {
     getReturnObject(parObj);
     if (filePath) {
         if (win) {
-            throw "此为浏览器客户端，无法将graphql写入文件，只能将其作为字符串返回！";
+            throw "zl-create-graphql-type: 当前代码运行环境为浏览器，无法将graphql类型写入文件，只能将其作为字符串返回！";
         }
         console.log("=======类型文件路径：", filePath);
         // 如果本地不存在这个文件，那么就会重新创建一个文件，如果存在此文件，那么在写入前，就清空原文件所有内容
