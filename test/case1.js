@@ -1,9 +1,8 @@
 // ========以覆盖原文件内容的方式将graphql类型写入到文件中=========
 const createGraphqlType = require("../create_graphql_type");
-// 调用示例（注意：为了获取到正确的类型，数据示例的字段值不能为undefined或者null）
 let parObj = {
-    filePath: __dirname + '/test.graphql', //值为false:将类型定义输出到此路径文件， 值为false:返回字符串到函数调用处，默认为false
-    rewrite: true,//表示是否以覆盖原文件内容的方式写入。true表示是,false表示以追加的方式写入文件. 默认为false:追加
+    filePath: __dirname + '/test.graphql', 
+    rewrite: true,
     typeObj: {
         "code": 200,
         "data": {
@@ -43,7 +42,6 @@ let parObj = {
     typeWay: 'type',
     typeName: 'testType'
 };
-
 // 执行
 createGraphqlType(parObj)
     .then(() => {

@@ -1,12 +1,21 @@
 // ===============graphql类型构造器：自动将dubbo端返回的数据结构转换成graphql对应的类型定义=====================
-let path={},fs={
-    appendFile:()=>{},
-    writeFile:()=>{},
-};  
-if(!window){ //兼容纯前端调用，即在浏览器里面执行
-     path = require('path');
-     fs = require('fs');
+let path, fs, win;
+
+//兼容纯前端调用，即在浏览器里面执行
+try {
+    // node端
+    path = require('path');
+    fs = require('fs');
+} catch (err) {
+    // 浏览器端
+    path = {};
+    fs = {
+        appendFile: () => { },
+        writeFile: () => { },
+    };
+    win=window;
 }
+
 
 // 对js类型和graphql类型做映射  graphql类型：String、Int、Float、Boolean 、 ID ,[Int]
 const TYPES = {
@@ -15,12 +24,21 @@ const TYPES = {
     float: 'Float', //如果typeof是number，且含有小数点，就设置类型为Float类型
     boolean: 'Boolean',
     // 下面的2个类型graphql是没有的，需要单独处理
-    array: 'Array', 
-    object: 'Object' 
+    array: 'Array',
+    object: 'Object'
 };
 
 
-// 根据后端数据结构，构造graphql类型
+/**
+* @function 获取graphql类型时真正调用的函数
+* @description 自动识参数数据结构，动态生成graphql类型定义
+* @param paramObj {Objectl} 接收一个对象参数
+* @param paramObj.typeWay {String} typeWay字段值为:input或type,input表示是输入类型,type表示输出类型
+* @param paramObj.typeName {String} 要构建的graphql类型的名字
+* @param paramObj.typeObj {Objectl} 要转换为graphql类型的实际数据结构
+* @return void
+* @author 张路 2021/08/08 
+*/
 function getReturnObject({ typeWay, typeName, typeObj }) {
     // typeWay:input|type 表示是输入类型还是输出类型, typeName：类型的名字, typeObj：实际类型对象
     // 逻辑：先递归遍历整个对象，针对每个对象，定义对应类型（名字就从外面一层层传下去，用下划线分隔开）
@@ -131,7 +149,32 @@ function deepResolveArryType(arr, typeName, typeWay) {
 }
 
 
-// 导出此函数供用户使用
+/**
+* @function 直接暴露给用户使用的函数模块
+* @description 自动识参数数据结构，动态生成graphql类型定义
+* @param paramObj {Objectl} 接收一个对象参数
+* @param paramObj.filePath {String|Boolean} 类型定义将输出到此string代表的路径文件，如果值为false:返回字符串到函数调用处，默认为false
+* @param paramObj.rewrite {Boolean} 表示是否以覆盖原文件内容的方式写入。true表示是,false表示以追加的方式写入文件. 默认为false:追加
+* @param paramObj.typeWay {String}  typeWay字段值为:input或type,input表示是输入类型,type表示输出类型
+* @param paramObj.typeName {String} 要构建的graphql类型的名字
+* @param paramObj.typeObj {Objectl} 要转换为graphql类型的实际数据结构（注意：为了识别正确的类型，数据示例的字段值不能为undefined或者null）
+* @return graphql类型定义字符串 / void(生成graphql类型定义文件)
+* @author 张路 2021/08/08 
+* @example
+* {
+*     "code": 200,
+*     "data": {
+*         "ext": {},
+*         "size": 10,
+*         "items": [
+*             {
+*                 "ext": ""
+*             }
+*         ]
+*     },
+*     "message": "success"
+* }
+*/
 async function createGraphqlType(parObj) {
     let { filePath = false, rewrite = false } = parObj;
     createGraphqlType.taskQue = [];// 创建一个任务队列数组
@@ -141,8 +184,8 @@ async function createGraphqlType(parObj) {
     createGraphqlType.rewrite = rewrite;
     getReturnObject(parObj);
     if (filePath) {
-        if(window){
-            throw "此为浏览器客户端，无法将graphql写入文件，只能将其作为字符串返回！" ;
+        if (win) {
+            throw "此为浏览器客户端，无法将graphql写入文件，只能将其作为字符串返回！";
         }
         console.log("=======类型文件路径：", filePath);
         // 如果本地不存在这个文件，那么就会重新创建一个文件，如果存在此文件，那么在写入前，就清空原文件所有内容
