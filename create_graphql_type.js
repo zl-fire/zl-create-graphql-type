@@ -37,7 +37,7 @@ const TYPES = {
 * @param paramObj.typeName {String} 要构建的graphql类型的名字
 * @param paramObj.typeObj {Objectl} 要转换为graphql类型的实际数据结构
 * @return void
-* @author 张路 2021/08/08 
+* @author zl-fire 2021/08/08 
 */
 function getReturnObject({ typeWay, typeName, typeObj }) {
     /* 
@@ -172,7 +172,7 @@ function deepResolveArryType(arr, typeName, typeWay) {
 * @param paramObj.typeName {String} 要构建的graphql类型的名字
 * @param paramObj.typeObj {Objectl} 要转换为graphql类型的实际数据结构（注意：为了识别正确的类型，数据示例的字段值不能为undefined或者null）
 * @return graphql类型定义字符串 / void(生成graphql类型定义文件)
-* @author 张路 2021/08/08 
+* @author zl-fire 2021/08/08 
 * @example
 * {
 *     "code": 200,
