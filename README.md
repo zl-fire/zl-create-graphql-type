@@ -7,7 +7,7 @@
 * 在node环境下运行，即可返回字符串内容也可直接生成文件到需要的位置处
 
 **演示：**
-   https://zhangluzhanglu.github.io/code/create_graphql_type.html
+   https://zl-fire.github.io/code/create_graphql_type.html
 
    ![alt 属性文本](./img/demo.png)
 
